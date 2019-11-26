@@ -1,18 +1,23 @@
 package com.example.smartrecyclingroute
 
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.smartrecyclingroute.Model.GroupList
+import com.example.smartrecyclingroute.Networking.RetrofitInitializer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
@@ -73,7 +78,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
 
         val currentLatLng = LatLng(location.latitude, location.longitude)
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+
+        val call = RetrofitInitializer().services().listEcopontos()
+        call.enqueue(object : Callback<GroupList> {
+            override fun onResponse(call: Call<GroupList>, response: Response<GroupList>) {
+                response.body()?.data?.forEach {
+                        val group_location = LatLng(it.lat, it.lon)
+                        map.addMarker(MarkerOptions().position(group_location).title(it.name))
+                    }
+            }
+
+            override fun onFailure(call: Call<GroupList>, t: Throwable) {
+                Log.e("onFailure error", t?.message)
+            }
+        })
     }
-
-
 }
