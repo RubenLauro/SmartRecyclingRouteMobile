@@ -1,21 +1,19 @@
 package com.example.smartrecyclingroute
 
-import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener {
@@ -24,57 +22,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private lateinit var map: GoogleMap
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var location: Location
 
-    private lateinit var lastLocation: Location
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        location = intent.extras?.get("location") as Location
     }
-
-    //PEDIR PERMISSÕES
-    val PERMISSION_ID = 42
-
-    private fun isLocationEnabled(): Boolean {
-        var locationManager: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
-
-    private fun checkPermissions(): Boolean {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            return true
-        }
-        return false
-    }
-
-    private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
-            PERMISSION_ID
-        )
-    }
-
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == PERMISSION_ID) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                // Granted. Start getting the location information
-            }
-        }
-    }
-
-    // FIM PEDIR PERMISSÕES
-
 
     /**
      * Manipulates the map once available.
@@ -94,10 +56,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         setUpMap()
     }
 
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-    }
-
     private fun setUpMap() {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -109,18 +67,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         // 1
         map.isMyLocationEnabled = true
 
-        // 2
 
-        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-            // Got last known location. In some rare situations this can be null.
-            // 3
-            if (location != null) {
-                lastLocation = location
-                val currentLatLng = LatLng(location.latitude, location.longitude)
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
-            }
-        }
+        // Got last known location. In some rare situations this can be null.
+        // 3
 
+        val currentLatLng = LatLng(location.latitude, location.longitude)
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
     }
+
 
 }
