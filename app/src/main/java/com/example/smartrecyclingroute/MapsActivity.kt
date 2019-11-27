@@ -1,9 +1,12 @@
 package com.example.smartrecyclingroute
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.smartrecyclingroute.Model.GroupList
@@ -43,15 +46,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         location = intent.extras?.get("location") as Location
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
@@ -72,19 +66,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         // 1
         map.isMyLocationEnabled = true
 
-
-        // Got last known location. In some rare situations this can be null.
-        // 3
-
         val currentLatLng = LatLng(location.latitude, location.longitude)
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
 
-        val call = RetrofitInitializer().services().listEcopontos()
+        val call = RetrofitInitializer().services().listGroups()
         call.enqueue(object : Callback<GroupList> {
             override fun onResponse(call: Call<GroupList>, response: Response<GroupList>) {
                 response.body()?.data?.forEach {
                         val group_location = LatLng(it.lat, it.lon)
-                        map.addMarker(MarkerOptions().position(group_location).title(it.name))
+                        map.addMarker(MarkerOptions().position(group_location).title(it.name).snippet("Show details"))
                     }
             }
 
@@ -92,5 +82,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                 Log.e("onFailure error", t?.message)
             }
         })
+
+        map.setOnInfoWindowClickListener {
+            val intent =  Intent(this, EcopontosActivity::class.java)
+            intent.putExtra("group_name", it.title)
+            startActivity(intent)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.camera_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val intent =  Intent(this, ReportActivity::class.java)
+        startActivity(intent)
+        return true
     }
 }

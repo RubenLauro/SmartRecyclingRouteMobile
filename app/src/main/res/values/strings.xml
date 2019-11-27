@@ -4,4 +4,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+    <string name="report_string">Report</string>
+    <string name="name_hint">Name</string>
+    <string name="latitude_hint">Latitude</string>
+    <string name="longitude_hint">Longitude</string>
+    <string name="description_hint">Description</string>
+    <string name="no_ecopontos_to_show_message">No Ecopontos to show</string>
 </resources>
