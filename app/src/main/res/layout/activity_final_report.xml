@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReportActivity">
+    tools:context=".IntialReportActivity">
 
     <ImageView
-        android:id="@+id/imageViewAddPhoto"
+        android:id="@+id/imageViewPhoto"
         android:layout_width="326dp"
         android:layout_height="201dp"
         app:srcCompat="@drawable/add_photo"
@@ -21,18 +21,19 @@
         android:id="@+id/txt_field_name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/name_hint"
-        app:layout_constraintTop_toBottomOf="@id/imageViewAddPhoto"
+        app:layout_constraintTop_toBottomOf="@id/imageViewPhoto"
+        app:layout_constraintBottom_toTopOf="@id/txt_field_latitude_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/txt_field_latitude_layout"
+        android:enabled="false"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        >
+        android:hint="@string/name_hint">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txt_field_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -41,16 +42,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/txt_field_name_layout"
+        app:layout_constraintBottom_toTopOf="@id/txt_field_longitude_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/txt_field_longitude_layout"
-        android:hint="@string/latitude_hint"
+        android:enabled="false"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
+        android:layout_marginEnd="8dp"
+        android:hint="@string/latitude_hint">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txt_field_latitude"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,38 +62,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/txt_field_latitude_layout"
+        app:layout_constraintBottom_toTopOf="@id/txt_field_description_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/txt_field_description_layout"
-        android:hint="@string/longitude_hint"
+        android:enabled="false"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="433dp">
+        android:hint="@string/longitude_hint">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txt_field_longitude"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txt_field_description_layout"
         android:layout_width="394dp"
         android:layout_height="181dp"
         android:hint="@string/description_hint"
-        app:counterEnabled="true"
-        app:counterMaxLength="100"
         app:layout_constraintTop_toBottomOf="@id/txt_field_longitude_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnReport"
+        android:enabled="false"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         tools:layout_editor_absoluteX="5dp"
         tools:layout_editor_absoluteY="495dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txt_field_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|start"

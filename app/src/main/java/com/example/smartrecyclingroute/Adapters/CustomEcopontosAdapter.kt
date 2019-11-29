@@ -10,7 +10,7 @@ import com.example.smartrecyclingroute.Model.Ecoponto
 import com.example.smartrecyclingroute.R
 import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_report.*
+import kotlinx.android.synthetic.main.activity_final_report.*
 
 class CustomEcopontosAdapter(val ecopontosList: List<Ecoponto>) :
     RecyclerView.Adapter<CustomEcopontosAdapter.ViewHolder>() {

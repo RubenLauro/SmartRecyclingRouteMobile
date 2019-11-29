@@ -5,26 +5,24 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_report.*
+import kotlinx.android.synthetic.main.activity_initial_report.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ReportActivity : AppCompatActivity() {
+class IntialReportActivity : AppCompatActivity() {
 
     private val PERMISSION_REQUEST_CODE: Int = 101
 
@@ -34,19 +32,31 @@ class ReportActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_report)
+        setContentView(R.layout.activity_initial_report)
 
         imageViewAddPhoto.setOnClickListener {
             if (checkPersmission())
                 takePicture()
-            else requestPermission()
+            else
+                requestPermission()
+        }
+
+        btnScanQRCode.setOnClickListener {
+            if (mCurrentPhotoPath != null && txt_field_description.text.toString().trim() != "" && !txt_field_description.text.toString().isEmpty()) {
+                val intent = Intent(this, ScanQRCodeActivity::class.java)
+                intent.putExtra("photo_path", mCurrentPhotoPath)
+                intent.putExtra("description", txt_field_description.text.toString())
+                startActivity(intent)
+            }else{
+                Snackbar.make(btnScanQRCode, R.string.error_empty_photo_description, Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 
     private fun checkPersmission(): Boolean {
-        return (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) ==
+        return (ContextCompat.checkSelfPermission(this, CAMERA) ==
                 PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     }
 
     private fun requestPermission() {
@@ -80,7 +90,6 @@ class ReportActivity : AppCompatActivity() {
 
             //To get the File for further usage
             val auxFile = File(mCurrentPhotoPath)
-
 
             Picasso.get().load(auxFile).into(imageViewAddPhoto)
         }

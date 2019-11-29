@@ -96,7 +96,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val intent =  Intent(this, ReportActivity::class.java)
+        val intent =  Intent(this, IntialReportActivity::class.java)
         startActivity(intent)
         return true
     }

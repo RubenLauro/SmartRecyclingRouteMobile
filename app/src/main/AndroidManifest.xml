@@ -30,7 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EcopontosActivity"></activity>
+        <activity android:name=".FinalReportActivity"></activity>
+        <activity android:name=".ScanQRCodeActivity" />
+        <activity android:name=".EcopontosActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -39,10 +41,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_path"></meta-data>
+                android:resource="@xml/file_path" />
         </provider>
 
-        <activity android:name=".ReportActivity" />
+        <activity android:name=".IntialReportActivity" />
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
