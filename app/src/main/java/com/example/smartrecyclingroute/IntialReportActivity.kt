@@ -47,6 +47,7 @@ class IntialReportActivity : AppCompatActivity() {
                 intent.putExtra("photo_path", mCurrentPhotoPath)
                 intent.putExtra("description", txt_field_description.text.toString())
                 startActivity(intent)
+                finish()
             }else{
                 Snackbar.make(btnScanQRCode, R.string.error_empty_photo_description, Snackbar.LENGTH_SHORT).show()
             }
@@ -103,7 +104,7 @@ class IntialReportActivity : AppCompatActivity() {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
+            "${timeStamp}_", /* prefix */
             ".jpg", /* suffix */
             storageDir /* directory */
         ).apply {

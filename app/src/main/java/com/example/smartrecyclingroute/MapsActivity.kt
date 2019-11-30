@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.smartrecyclingroute.Model.GroupList
 import com.example.smartrecyclingroute.Networking.RetrofitInitializer
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -18,6 +20,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_final_report.*
+import kotlinx.android.synthetic.main.activity_maps.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,11 +31,13 @@ import retrofit2.Response
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener {
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private lateinit var lastLocation: Location
+
     override fun onMarkerClick(p0: Marker?) = false
 
     private lateinit var map: GoogleMap
-
-    private lateinit var location: Location
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -40,10 +47,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
 
-        location = intent.extras?.get("location") as Location
+        var locationExtra = intent.extras?.get("location")
+        if (locationExtra != null){
+            lastLocation = locationExtra as Location
+            val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+            mapFragment.getMapAsync(this)
+        } else{
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+            // 2
+            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+                // Got last known location. In some rare situations this can be null.
+                // 3
+                if (location != null) {
+                    lastLocation = location
+                    val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+                    mapFragment.getMapAsync(this)
+                }
+            }
+        }
+
+        val stringMessage = intent.getStringExtra("message")
+        if (stringMessage != null){
+            Snackbar.make(contraint_layout_map, stringMessage, Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -56,25 +84,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     }
 
     private fun setUpMap() {
-        if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-            return
-        }
-
         // 1
         map.isMyLocationEnabled = true
 
-        val currentLatLng = LatLng(location.latitude, location.longitude)
+        val currentLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
 
         val call = RetrofitInitializer().services().listGroups()
         call.enqueue(object : Callback<GroupList> {
             override fun onResponse(call: Call<GroupList>, response: Response<GroupList>) {
                 response.body()?.data?.forEach {
-                        val group_location = LatLng(it.lat, it.lon)
-                        map.addMarker(MarkerOptions().position(group_location).title(it.name).snippet("Show details"))
+                        val groupLocation = LatLng(it.lat, it.lon)
+                        map.addMarker(MarkerOptions().position(groupLocation).title(it.name).snippet("Show details"))
                     }
             }
 

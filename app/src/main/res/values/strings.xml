@@ -12,4 +12,5 @@
     <string name="no_ecopontos_to_show_message">No Ecopontos to show</string>
     <string name="scan_qr_code_string">Scan QR code</string>
     <string name="error_empty_photo_description">⚠️  Please fill in description and photo</string>
+    <string name="response_error_text">⚠️  Something went wrong. Try again</string>
 </resources>

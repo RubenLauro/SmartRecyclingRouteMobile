@@ -36,7 +36,11 @@ class ScanQRCodeActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         // Do something with the result here
         // Log.v("tag", rawResult.getText()); // Prints scan results
         // Log.v("tag", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
-        //TODO verificar o distance between com a distancia do user e a distancia lida do qrcode
+        /**todo passar por intent a localização atual do user
+         * todo criar duas locations uma com a distancia do user e a distancia lida do qrupo
+         * todo verificar o distance between com o metodo distance between do Location
+         * todo se for menor que x voltar para o mapa com o startActivity e mostrar um alerta
+         */
 
         Log.v("tag", rawResult.text)
         val intent =  Intent(this, FinalReportActivity::class.java)
@@ -44,6 +48,7 @@ class ScanQRCodeActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         intent.putExtra("description", description)
         intent.putExtra("photo_path", currentPhotoPath)
         startActivity(intent)
+        finish()
         //onBackPressed()
 
         // If you would like to resume scanning, call this method below:

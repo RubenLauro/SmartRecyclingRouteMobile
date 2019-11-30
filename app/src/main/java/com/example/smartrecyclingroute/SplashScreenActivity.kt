@@ -8,6 +8,7 @@ import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.animation.AnimationUtils
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -33,27 +34,29 @@ class SplashScreenActivity : AppCompatActivity() {
         rotation.fillAfter = true
         imageView.startAnimation(rotation)
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && isLocationEnabled()) {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && isLocationEnabled()) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             return
         }
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        Handler().postDelayed({
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // 2
+            // 2
 
-        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-            // Got last known location. In some rare situations this can be null.
-            // 3
-            if (location != null) {
-                lastLocation = location
-                val intent =  Intent(this, MapsActivity::class.java)
-                intent.putExtra("location", location)
-                startActivity(intent)
-                finish()
+            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+                // Got last known location. In some rare situations this can be null.
+                // 3
+                if (location != null) {
+                    imageView.clearAnimation()
+                    lastLocation = location
+                    val intent =  Intent(this, MapsActivity::class.java)
+                    intent.putExtra("location", location)
+                    startActivity(intent)
+                    finish()
+                }
             }
-        }
-
+        }, 3000)
     }
 
     //PEDIR PERMISSÕES
@@ -73,11 +76,11 @@ class SplashScreenActivity : AppCompatActivity() {
                 fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
                 // 2
-
                 fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
                     // Got last known location. In some rare situations this can be null.
                     // 3
                     if (location != null) {
+                        imageView.clearAnimation()
                         lastLocation = location
                         val intent =  Intent(this, MapsActivity::class.java)
                         intent.putExtra("location", location)
