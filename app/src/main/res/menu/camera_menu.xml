@@ -4,6 +4,5 @@
 
     <item android:title="@string/report_string"
         android:id="@+id/camera_menu_item"
-        android:icon="@drawable/ic_photo_camera_white_24dp"
         app:showAsAction="ifRoom"/>
 </menu>

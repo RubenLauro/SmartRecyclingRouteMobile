@@ -4,7 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
-    <string name="report_string">Report</string>
+    <string name="report_string">📷  Report</string>
     <string name="name_hint">Name</string>
     <string name="latitude_hint">Latitude</string>
     <string name="longitude_hint">Longitude</string>
@@ -13,4 +13,5 @@
     <string name="scan_qr_code_string">Scan QR code</string>
     <string name="error_empty_photo_description">⚠️  Please fill in description and photo</string>
     <string name="response_error_text">⚠️  Something went wrong. Try again</string>
+    <string name="error_far_from_ecoponto">⚠️  Please be closer to the Ecoponto</string>
 </resources>

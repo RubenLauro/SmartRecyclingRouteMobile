@@ -1,14 +1,12 @@
 package com.example.smartrecyclingroute
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.example.smartrecyclingroute.Model.GroupList
 import com.example.smartrecyclingroute.Networking.RetrofitInitializer
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -17,11 +15,11 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_final_report.*
 import kotlinx.android.synthetic.main.activity_maps.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -95,7 +93,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
             override fun onResponse(call: Call<GroupList>, response: Response<GroupList>) {
                 response.body()?.data?.forEach {
                         val groupLocation = LatLng(it.lat, it.lon)
-                        map.addMarker(MarkerOptions().position(groupLocation).title(it.name).snippet("Show details"))
+                        map.addMarker(MarkerOptions().position(groupLocation).title(it.name).snippet("Show details")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)))
                     }
             }
 

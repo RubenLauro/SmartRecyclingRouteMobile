@@ -56,7 +56,7 @@ class SplashScreenActivity : AppCompatActivity() {
                     finish()
                 }
             }
-        }, 3000)
+        }, 2500)
     }
 
     //PEDIR PERMISSÕES

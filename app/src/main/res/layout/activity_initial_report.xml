@@ -31,7 +31,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         tools:layout_editor_absoluteX="5dp"
-        tools:layout_editor_absoluteY="495dp">
+        tools:layout_editor_absoluteY="495dp"
+        app:boxBackgroundColor="#FFFFFF"
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/txt_field_description"
@@ -42,7 +44,8 @@
             android:lines="8"
             android:maxLines="10"
             android:minLines="6"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical"
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 

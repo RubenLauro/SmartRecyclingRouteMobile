@@ -47,7 +47,6 @@ class IntialReportActivity : AppCompatActivity() {
                 intent.putExtra("photo_path", mCurrentPhotoPath)
                 intent.putExtra("description", txt_field_description.text.toString())
                 startActivity(intent)
-                finish()
             }else{
                 Snackbar.make(btnScanQRCode, R.string.error_empty_photo_description, Snackbar.LENGTH_SHORT).show()
             }
