@@ -94,7 +94,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                 response.body()?.data?.forEach {
                         val groupLocation = LatLng(it.lat, it.lon)
                         map.addMarker(MarkerOptions().position(groupLocation).title(it.name).snippet("Show details")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.info)))
+                                /*.fromResource(R.drawable.info)*/
                     }
             }
 
