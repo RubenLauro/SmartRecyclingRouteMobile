@@ -1,12 +1,17 @@
 package com.example.smartrecyclingroute
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.smartrecyclingroute.Model.GroupList
 import com.example.smartrecyclingroute.Networking.RetrofitInitializer
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -15,10 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_maps.*
 import retrofit2.Call
@@ -94,7 +96,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                 response.body()?.data?.forEach {
                         val groupLocation = LatLng(it.lat, it.lon)
                         map.addMarker(MarkerOptions().position(groupLocation).title(it.name).snippet("Show details")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.info)))
+                            .icon(bitmapDescriptorFromVector(applicationContext, R.drawable.ic_info_marker)))
                                 /*.fromResource(R.drawable.info)*/
                     }
             }
@@ -108,6 +110,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
             val intent =  Intent(this, EcopontosActivity::class.java)
             intent.putExtra("group_name", it.title)
             startActivity(intent)
+        }
+    }
+
+    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+        return ContextCompat.getDrawable(context, vectorResId)?.run {
+            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+            draw(Canvas(bitmap))
+            BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
 
