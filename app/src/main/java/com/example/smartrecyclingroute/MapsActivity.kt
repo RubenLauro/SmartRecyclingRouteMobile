@@ -9,10 +9,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.smartrecyclingroute.Model.GroupList
+import com.example.smartrecyclingroute.Model.EcopontoClusterItem
+import com.example.smartrecyclingroute.Model.MarkerClusterRenderer
 import com.example.smartrecyclingroute.Networking.RetrofitInitializer
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
+import com.google.maps.android.clustering.ClusterManager
 import kotlinx.android.synthetic.main.activity_maps.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,16 +41,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private lateinit var map: GoogleMap
 
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-    }
+    private lateinit var mClusterManager: ClusterManager<EcopontoClusterItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
-        var locationExtra = intent.extras?.get("location")
+        val locationExtra = intent.extras?.get("location")
         if (locationExtra != null){
             lastLocation = locationExtra as Location
             val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -80,6 +80,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener(this)
 
+        mClusterManager = ClusterManager<EcopontoClusterItem>(this, map)
+
+        mClusterManager.renderer = MarkerClusterRenderer(this, googleMap, mClusterManager)
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        map.setOnCameraIdleListener(mClusterManager);
+        //getMap().setOnMarkerClickListener(mClusterManager);
+
         setUpMap()
     }
 
@@ -94,10 +103,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         call.enqueue(object : Callback<GroupList> {
             override fun onResponse(call: Call<GroupList>, response: Response<GroupList>) {
                 response.body()?.data?.forEach {
+                        val infoWindowItem = EcopontoClusterItem(it.lat, it.lon, it.name, "Show details")
+
+                        // Add the cluster item (marker) to the cluster manager.
+                        mClusterManager.addItem(infoWindowItem)
+
+                    /*
                         val groupLocation = LatLng(it.lat, it.lon)
                         map.addMarker(MarkerOptions().position(groupLocation).title(it.name).snippet("Show details")
                             .icon(bitmapDescriptorFromVector(applicationContext, R.drawable.ic_info_marker)))
                                 /*.fromResource(R.drawable.info)*/
+
+                     */
                     }
             }
 
@@ -110,15 +127,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
             val intent =  Intent(this, EcopontosActivity::class.java)
             intent.putExtra("group_name", it.title)
             startActivity(intent)
-        }
-    }
-
-    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-        return ContextCompat.getDrawable(context, vectorResId)?.run {
-            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
-            draw(Canvas(bitmap))
-            BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
 
