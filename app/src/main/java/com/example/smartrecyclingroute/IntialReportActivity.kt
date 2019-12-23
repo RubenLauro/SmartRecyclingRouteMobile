@@ -100,7 +100,7 @@ class IntialReportActivity : AppCompatActivity() {
     @Throws(IOException::class)
     private fun createFile(): File {
         // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val timeStamp: String = SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
             "${timeStamp}_", /* prefix */
