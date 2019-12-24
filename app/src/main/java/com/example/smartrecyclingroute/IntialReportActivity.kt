@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -22,13 +25,15 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class IntialReportActivity : AppCompatActivity() {
+class IntialReportActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private val PERMISSION_REQUEST_CODE: Int = 101
 
     val REQUEST_IMAGE_CAPTURE = 1
 
     private var mCurrentPhotoPath: String? = null
+
+    val types_of_malfunctions = arrayOf("Damage","Breakdown","Full","Other")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,16 +46,26 @@ class IntialReportActivity : AppCompatActivity() {
                 requestPermission()
         }
 
+
+        spinner_type!!.setOnItemSelectedListener(this)
+
+        val array_adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, types_of_malfunctions)
+        array_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spinner_type!!.setAdapter(array_adapter)
+
         btnScanQRCode.setOnClickListener {
             if (mCurrentPhotoPath != null && txt_field_description.text.toString().trim() != "" && !txt_field_description.text.toString().isEmpty()) {
                 val intent = Intent(this, ScanQRCodeActivity::class.java)
                 intent.putExtra("photo_path", mCurrentPhotoPath)
                 intent.putExtra("description", txt_field_description.text.toString())
-                startActivity(intent)
+                intent.putExtra("type", spinner_type.getSelectedItem().toString())
             }else{
                 Snackbar.make(btnScanQRCode, R.string.error_empty_photo_description, Snackbar.LENGTH_SHORT).show()
             }
         }
+
+
     }
 
     private fun checkPersmission(): Boolean {
@@ -122,7 +137,18 @@ class IntialReportActivity : AppCompatActivity() {
             "com.example.android.fileprovider",
             file
         )
+
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
     }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onItemSelected(arg0: AdapterView<*>, arg1: View, position: Int, id: Long) {
+        Toast.makeText(this, types_of_malfunctions[position], position)
+    }
+
+
 }

@@ -35,6 +35,8 @@ class FinalReportActivity : AppCompatActivity() {
         txt_field_description.setText(stringExtraDescription)
         val auxFile = File(intent.getStringExtra("photo_path"))
         Picasso.get().load(auxFile).into(imageViewPhoto)
+        val stringType = intent.getStringExtra("type")
+        //FALTA AQUI O TXT_FIELD
 
         val compressedImageFile = Compressor(this).compressToFile(auxFile)
 
@@ -48,7 +50,9 @@ class FinalReportActivity : AppCompatActivity() {
             val lat = RequestBody.create(MediaType.parse("text/plain"), qtContentSplited[1])
             val lon = RequestBody.create(MediaType.parse("text/plain"), qtContentSplited[2])
             val desctiption = RequestBody.create(MediaType.parse("text/plain"), stringExtraDescription!!)
+            val type = RequestBody.create(MediaType.parse("text/plain"), stringType!!)
 
+            //FALTA MANDAR NA CALL O TYPE PENSO
             val call = RetrofitInitializer().services().updateActivityTeamStatus(part, groupName, lat, lon, desctiption)
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
