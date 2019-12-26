@@ -21,6 +21,7 @@ class ScanQRCodeActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     private var mScannerView: ZXingScannerView? = null
     private lateinit var description: String
     private lateinit var currentPhotoPath: String
+    private lateinit var currentType: String
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -28,10 +29,13 @@ class ScanQRCodeActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
     public override fun onCreate(state: Bundle?) {
         super.onCreate(state)
+        title = "Scan Qr code"
+        //todo talvez adicionar menu item com ajuda na localização do qr code
         mScannerView = ZXingScannerView(this)   // Programmatically initialize the scanner view
         setContentView(mScannerView)                // Set the scanner view as the content view
         description = intent.getStringExtra("description")!!
         currentPhotoPath = intent.getStringExtra("photo_path")!!
+        currentType = intent.getStringExtra("type")!!
     }
 
     public override fun onResume() {
@@ -86,8 +90,9 @@ class ScanQRCodeActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                     intent.putExtra("qr_content", rawResult.text)
                     intent.putExtra("description", description)
                     intent.putExtra("photo_path", currentPhotoPath)
+                    intent.putExtra("type", currentType)
                     startActivity(intent)
-                    finish()
+                   // finish()
                 }
             }
         }

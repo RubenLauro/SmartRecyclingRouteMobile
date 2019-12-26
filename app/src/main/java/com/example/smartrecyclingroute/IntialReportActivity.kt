@@ -6,14 +6,15 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -22,10 +23,12 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_initial_report.*
 import java.io.File
 import java.io.IOException
+import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-class IntialReportActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+
+class IntialReportActivity : AppCompatActivity() {
 
     private val PERMISSION_REQUEST_CODE: Int = 101
 
@@ -39,6 +42,8 @@ class IntialReportActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_initial_report)
 
+        title = "Initial report"
+
         imageViewAddPhoto.setOnClickListener {
             if (checkPersmission())
                 takePicture()
@@ -46,20 +51,25 @@ class IntialReportActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
                 requestPermission()
         }
 
-
+        val adapter: ArrayAdapter<String> = ArrayAdapter(applicationContext, R.layout.dropdown_menu_popup_item, types_of_malfunctions)
+        filled_exposed_dropdown.setAdapter(adapter)
+        /*
         spinner_type!!.setOnItemSelectedListener(this)
 
         val array_adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, types_of_malfunctions)
         array_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinner_type!!.setAdapter(array_adapter)
+         */
 
         btnScanQRCode.setOnClickListener {
-            if (mCurrentPhotoPath != null && txt_field_description.text.toString().trim() != "" && !txt_field_description.text.toString().isEmpty()) {
+
+            if (mCurrentPhotoPath != null && txt_field_description.text.toString().trim() != "" && txt_field_description.text.toString().isNotEmpty() && filled_exposed_dropdown.text.toString().isNotEmpty()) {
                 val intent = Intent(this, ScanQRCodeActivity::class.java)
                 intent.putExtra("photo_path", mCurrentPhotoPath)
                 intent.putExtra("description", txt_field_description.text.toString())
-                intent.putExtra("type", spinner_type.getSelectedItem().toString())
+                intent.putExtra("type", filled_exposed_dropdown.text.toString())
+                startActivity(intent)
             }else{
                 Snackbar.make(btnScanQRCode, R.string.error_empty_photo_description, Snackbar.LENGTH_SHORT).show()
             }
@@ -141,14 +151,4 @@ class IntialReportActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
     }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onItemSelected(arg0: AdapterView<*>, arg1: View, position: Int, id: Long) {
-        Toast.makeText(this, types_of_malfunctions[position], position)
-    }
-
-
 }

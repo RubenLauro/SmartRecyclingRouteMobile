@@ -26,6 +26,8 @@ class FinalReportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_final_report)
 
+        title = "Final report"
+
         val qrContent = intent.getStringExtra("qr_content")
         val qtContentSplited = qrContent!!.split(";")
         txt_field_name.setText(qtContentSplited[0])
@@ -33,10 +35,11 @@ class FinalReportActivity : AppCompatActivity() {
         txt_field_longitude.setText(qtContentSplited[2])
         val stringExtraDescription = intent.getStringExtra("description")
         txt_field_description.setText(stringExtraDescription)
+
         val auxFile = File(intent.getStringExtra("photo_path"))
         Picasso.get().load(auxFile).into(imageViewPhoto)
         val stringType = intent.getStringExtra("type")
-        //FALTA AQUI O TXT_FIELD
+        txt_field_type.setText(intent.getStringExtra("type"))
 
         val compressedImageFile = Compressor(this).compressToFile(auxFile)
 
@@ -52,8 +55,7 @@ class FinalReportActivity : AppCompatActivity() {
             val desctiption = RequestBody.create(MediaType.parse("text/plain"), stringExtraDescription!!)
             val type = RequestBody.create(MediaType.parse("text/plain"), stringType!!)
 
-            //FALTA MANDAR NA CALL O TYPE PENSO
-            val call = RetrofitInitializer().services().updateActivityTeamStatus(part, groupName, lat, lon, desctiption)
+            val call = RetrofitInitializer().services().createReport(part, groupName, lat, lon, desctiption, type)
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                    if(response.isSuccessful){

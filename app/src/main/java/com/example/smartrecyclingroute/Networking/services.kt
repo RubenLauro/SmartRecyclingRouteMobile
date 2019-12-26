@@ -18,9 +18,10 @@ interface Services {
 
     @Multipart
     @POST("reports")
-    fun updateActivityTeamStatus(@Part file: MultipartBody.Part,
+    fun createReport(@Part file: MultipartBody.Part,
                                  @Part("group_name") groupName: RequestBody,
                                  @Part("lat") lat: RequestBody,
                                  @Part("lon") lon: RequestBody,
-                                 @Part("description") description: RequestBody): Call<ResponseBody>
+                                 @Part("description") description: RequestBody,
+                                 @Part("type") type: RequestBody): Call<ResponseBody>
 }

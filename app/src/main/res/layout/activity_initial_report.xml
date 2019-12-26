@@ -18,6 +18,29 @@
         app:layout_constraintBottom_toTopOf="@id/txt_field_description_layout" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dropdown_type"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/imageViewAddPhoto"
+        app:layout_constraintBottom_toTopOf="@id/txt_field_description_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:boxBackgroundColor="#FFFFFF"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:labelFor="@id/filled_exposed_dropdown"
+        android:hint="@string/hint_text_type">
+
+        <AutoCompleteTextView
+            android:editable="false"
+            android:id="@+id/filled_exposed_dropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txt_field_description_layout"
         android:layout_width="394dp"
         android:layout_height="181dp"
@@ -55,6 +78,8 @@
         android:layout_marginEnd="8dp"
         android:text="@string/scan_qr_code_string" />
 
+    <!--
+
     <Spinner
         android:id="@+id/spinner_type"
         android:layout_width="394dp"
@@ -64,5 +89,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewAddPhoto"
         app:layout_constraintVertical_bias="0.447" />
+        -->
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
