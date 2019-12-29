@@ -58,12 +58,14 @@ class CustomEcopontosAdapter(val ecopontosList: List<Ecoponto>) :
 
         holder.txtCapacity?.text = "Capacidade " + ecopontosList[position].capacity.toString() + " %"
 
+        holder.lastUpdate.text = "Last Update " + ecopontosList[position].updated_at
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
             LayoutInflater.from(parent.context).inflate(R.layout.ecoponto_list_item, parent, false)
-        return ViewHolder(v);
+        return ViewHolder(v)
     }
 
     override fun getItemCount(): Int {
@@ -75,6 +77,7 @@ class CustomEcopontosAdapter(val ecopontosList: List<Ecoponto>) :
         val txtCapacity = itemView.findViewById<TextView>(R.id.txtCapacity)
         val chipStatus = itemView.findViewById<Chip>(R.id.status_chip)
         val ecopontoImage = itemView.findViewById<ImageView>(R.id.imageViewEcoponto)
+        val lastUpdate = itemView.findViewById<TextView>(R.id.txt_last_update)
     }
 
 }
