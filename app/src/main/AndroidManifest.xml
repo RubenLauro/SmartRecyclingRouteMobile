@@ -30,9 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".FinalReportActivity"></activity>
-        <activity android:name=".ScanQRCodeActivity" />
-        <activity android:name=".EcopontosActivity" />
+        <activity android:name=".FinalReportActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".ScanQRCodeActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".EcopontosActivity" android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -44,10 +44,11 @@
                 android:resource="@xml/file_path" />
         </provider>
 
-        <activity android:name=".IntialReportActivity" />
+        <activity android:name=".IntialReportActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
